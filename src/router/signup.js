@@ -13,21 +13,31 @@ const sessionChecker = (req, res, next) => {
 };
 
 router.route('/')
-  .get(sessionChecker, (req, res) => {
-    res.sendFile(path.dirname(__dirname) + '/templates/signup.html');
-  })
-  .post((req, res) => {
-    User.create({
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password
-  })
-  .then(user => {
+.get(sessionChecker, (req, res) => {
+  if (req.query.consent_flow){
+    res.render('signup-consent', { challenge: req.query.challenge });
+  } else {
+    res.render('signup');
+  };
+})
+.post((req, res) => {
+  const email = req.body.email;
+  const username = req.body.username;
+  const password = req.body.password;
+  const challenge = req.body.challenge;
+  const consent_flow = req.body.consent_flow;
+
+  User.create({username, email, password}).then(user => {
     req.session.user = user.dataValues;
-    res.redirect('/dashboard');
+
+    if(consent_flow) {
+      res.redirect(`/consent?challenge=${challenge}`);
+    } else {
+      res.redirect('/dashboard');
+    }
   })
   .catch(error => {
-    res.redirect('/signup');
+    res.redirect('/');
   });
 });
 

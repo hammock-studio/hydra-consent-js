@@ -1,5 +1,22 @@
 ## Hydra Consent App
 
+## TODO
+
+1. clean the code of the PR √
+2. add Policy . √
+
+4. purge the cookies session and find solution for the JWTs maybe local storage WIP
+5. redirect to the dashboard
+
+9. add admin and roles option, roles management. (connect to the ory-postgres).
+   fix the UGLY HACK for privileged token.
+6. add integration test, get inspiration from other projects
+
+3. use docker-compose and add the full flow to the README.md with Makefile
+7. add continuous integration circle/travis to kubernetes/heroku.
+
+8. add email verification to the flow.
+
 ### Quick start using docker:
 
 ```
