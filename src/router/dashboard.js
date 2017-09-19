@@ -4,9 +4,9 @@ const path = require('path');
 
 router.get('/', (req, res) => {
   if (req.session.user && req.cookies.user_sid) {
-    res.sendFile(path.dirname(__dirname) + '/templates/dashboard.html');
+    res.render('dashboard');
   } else {
-    res.redirect('/login');
+    res.redirect('/');
   }
 });
 

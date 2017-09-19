@@ -5,31 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
-
-    <title>Signup</title>
-
+    <title>Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-
     <link href="../css/login.css" rel="stylesheet">
   </head>
 
   <body>
     <div class="container">
-      <form class="form-signin" action="/signup" method="post">
-        <h2 class="form-signin-heading">Please sign up</h2>
+      <form class="form-signin" action="/login" method="post">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        </br>
+        </br>
         <label for="inputEmail" class="sr-only">Username</label>
         <input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" name="email" class="form-control" placeholder="Email address" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" name="password" class="form-control" placeholder="Password" required>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
         </br>
         </br>
-        <button type="button" class="btn btn-link"><a href="/login">Login</a></button>
+        <button type="button" class="btn btn-link"><a href="/signup">Signup</a></button>
       </form>
     </div>
   </body>
 </html>
-

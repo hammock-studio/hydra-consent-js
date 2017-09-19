@@ -6,7 +6,7 @@ router.get('/', (req, res) => {
     res.clearCookie('user_sid');
     res.redirect('/');
   } else {
-    res.redirect('/login');
+    res.redirect('/');
   }
 });
 

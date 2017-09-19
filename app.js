@@ -1,14 +1,15 @@
 require('dotenv').config();
 
-const config = require('./config/');
+const config = require('./config');
 const express = require('express');
 const bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const app = express();
+const exphbs = require('express-handlebars');
 const router = require('./src/router');
+const hbs = exphbs.create({ layoutsDir: "./src/templates" });
 
-//setup models
 require('./src/models')(config.db);
 
 config.db.sync()
@@ -16,7 +17,11 @@ config.db.sync()
   .catch(error => console.log('This error occured', error));
 
 app.use(bodyParser.urlencoded({ extended: true  }));
-app.use(express.static('src/templates'));
+app.use(express.static('./src/templates'));
+app.set('views', './src/templates');
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
+
 app.use(cookieParser());
 
 app.use(session({
