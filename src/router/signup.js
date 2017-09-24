@@ -1,8 +1,8 @@
 const express = require('express');
-const router = express.Router();
-const path = require('path');
 const config = require('../../config');
 const User = require('../models/user')(config.db);
+
+const router = express.Router();
 
 const sessionChecker = (req, res, next) => {
   if (req.session.user && req.cookies.user_sid) {
@@ -12,31 +12,28 @@ const sessionChecker = (req, res, next) => {
   }
 };
 
-router.route('/')
-.get(sessionChecker, (req, res) => {
-  if (req.query.consent_flow){
+router.route('/').get(sessionChecker, (req, res) => {
+  if (req.query.consent_flow) {
     res.render('signup-consent', { challenge: req.query.challenge });
   } else {
     res.render('signup');
+  }
+}).post((req, res) => {
+  const userData = {
+    username: req.body.username,
+    password: req.body.password,
+    email: req.body.email
   };
-})
-.post((req, res) => {
-  const email = req.body.email;
-  const username = req.body.username;
-  const password = req.body.password;
-  const challenge = req.body.challenge;
-  const consent_flow = req.body.consent_flow;
 
-  User.create({username, email, password}).then(user => {
+  User.create(userData).then(user => {
     req.session.user = user.dataValues;
 
-    if(consent_flow) {
-      res.redirect(`/consent?challenge=${challenge}`);
+    if (req.body.consent_flow) {
+      res.redirect(`/consent?challenge=${req.body.challenge}`);
     } else {
       res.redirect('/dashboard');
     }
-  })
-  .catch(error => {
+  }).catch(() => {
     res.redirect('/');
   });
 });
