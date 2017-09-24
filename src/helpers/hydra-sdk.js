@@ -85,10 +85,31 @@ const createUserPolicy = (user, callback) => {
   });
 };
 
+const validateToken = (token, callback) => {
+  const Hydra = require('hydra-js');
+  const hydra = new Hydra();
+
+  hydra.validateToken(token).then((body) => {
+    callback(null, { body });
+  }).catch((error) => {
+    callback({ error });
+  });
+};
+
+const isTokenActive = (token, callback) => {
+  validateToken(token, (error, body) => {
+    if (error) return callback(error);
+
+    return callback(body.active);
+  });
+};
+
 module.exports = {
   getAuthorizationURI,
   getAuthTokenViaCode,
   getClient,
   getPolicy,
-  createUserPolicy
+  createUserPolicy,
+  validateToken,
+  isTokenActive
 };
