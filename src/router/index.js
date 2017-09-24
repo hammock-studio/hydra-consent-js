@@ -1,5 +1,6 @@
 const hydraSDK = require('../helpers/hydra-sdk');
 const express = require('express');
+
 const router = express.Router();
 
 router.use('/login', require('./login'));
@@ -23,15 +24,15 @@ router.get('/', sessionChecker, (req, res) => {
 // add the token to local storage solution.
 router.get('/callback', (req, res) => {
   hydraSDK.getAuthTokenViaCode(req.query.code, (error, token) => {
-    if(error) { res.json ({ error }) };
+    if (error) { res.json({ error }); }
 
     hydraSDK.createUserPolicy(req.session.user.username, (error, result) => {
-      if(error) { res.json ({ error }) };
+      if (error) { res.json({ error, result }); }
 
       hydraSDK.getPolicy(token.token.access_token, (error, result) => {
-        if(error) { res.json ({ error }) };
+        if (error) { res.json({ error, result }); }
 
-        res.json({error, result: JSON.parse(result.body), location: "getPolicy" });
+        res.json({ error, result: JSON.parse(result.body), location: 'getPolicy' });
       });
     });
   });

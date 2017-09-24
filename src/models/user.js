@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt-nodejs');
 const Sequelize = require('sequelize');
 
 module.exports = (db) => {
-  User = db.define('users', {
+  const User = db.define('users', {
     username: {
       type: Sequelize.STRING,
       unique: true,
@@ -26,7 +26,7 @@ module.exports = (db) => {
     }
   });
 
-  User.prototype.validPassword =  function(password) {
+  User.prototype.validPassword = function validPassword(password) {
     return bcrypt.compareSync(password, this.password);
   };
 

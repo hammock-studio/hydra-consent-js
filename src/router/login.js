@@ -1,8 +1,8 @@
 const express = require('express');
-const router = express.Router();
-const path = require('path');
 const config = require('../../config');
 const User = require('../models/user')(config.db);
+
+const router = express.Router();
 
 const sessionChecker = (req, res, next) => {
   if (req.session.user && req.cookies.user_sid) {
@@ -12,31 +12,22 @@ const sessionChecker = (req, res, next) => {
   }
 };
 
-router.route('/')
-.get(sessionChecker, (req, res) => {
-  if (req.query.consent_flow){
-    res.render('login-consent', {challenge: req.query.challenge });
+router.route('/').get(sessionChecker, (req, res) => {
+  if (req.query.consent_flow) {
+    res.render('login-consent', { challenge: req.query.challenge });
   } else {
     res.render('login');
-  };
-})
-.post((req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  const challenge = req.body.challenge;
-  const consent_flow = req.body.consent_flow;
-
-  User.findOne({ where: { username }}).then(function(user) {
+  }
+}).post((req, res) => {
+  User.findOne({ where: { username: req.body.username } }).then((user) => {
     if (!user) {
-      //add error flash
       res.redirect('/');
-    } else if (!user.validPassword(password)) {
-      //add error flash
+    } else if (!user.validPassword(req.body.password)) {
       res.redirect('/');
     } else {
       req.session.user = user.dataValues;
-      if(consent_flow) {
-        res.redirect(`/consent?challenge=${challenge}`);
+      if (req.body.consent_flow) {
+        res.redirect(`/consent?challenge=${req.body.challenge}`);
       } else {
         res.redirect('/dashboard');
       }
