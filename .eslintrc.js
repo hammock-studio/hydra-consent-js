@@ -1,5 +1,10 @@
 module.exports = {
     "extends": "airbnb-base",
+    "env": {
+      "browser": true,
+      "node": true,
+      "mocha": true
+    },
     "rules": {
       "comma-dangle": ["error", "never"],
       "no-shadow": [2, {"allow": ["callback", "error", "result"]}],
