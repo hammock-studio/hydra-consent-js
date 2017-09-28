@@ -10,7 +10,7 @@ router.use('/consent', require('./consent'));
 router.use('/dashboard', require('./dashboard'));
 
 const sessionChecker = (req, res, next) => {
-  if (req.session.user && req.cookies.user_sid) {
+  if (req.session.user && req.cookies.user_sid && req.session.user.access_token) {
     res.redirect('/dashboard');
   } else {
     next();
@@ -21,7 +21,6 @@ router.get('/', sessionChecker, (req, res) => {
   res.redirect(hydraSDK.getAuthorizationURI());
 });
 
-// add the token to local storage solution.
 router.get('/callback', (req, res) => {
   hydraSDK.getAuthTokenViaCode(req.query.code, (error, token) => {
     if (error) { res.json({ error }); }
@@ -29,11 +28,10 @@ router.get('/callback', (req, res) => {
     hydraSDK.createUserPolicy(req.session.user.username, (error, result) => {
       if (error) { res.json({ error, result }); }
 
-      hydraSDK.getPolicy(token.token.access_token, (error, result) => {
-        if (error) { res.json({ error, result }); }
+      req.session.user.access_token = token.token.access_token;
+      req.session.user.refresh_token = token.token.refresh_token;
 
-        res.json({ error, result: JSON.parse(result.body), location: 'getPolicy' });
-      });
+      res.redirect('/dashboard');
     });
   });
 });

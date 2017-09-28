@@ -1,3 +1,3 @@
-nock = require('nock');
+const nock = require('nock');
 
 nock.disableNetConnect();
