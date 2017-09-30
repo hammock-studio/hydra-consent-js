@@ -2,20 +2,20 @@
 
 ## TODO
 
-1. clean the code of the PR √
-2. add Policy . √
-
-4. purge the cookies session and find solution for the JWTs maybe local storage WIP
-5. redirect to the dashboard
-
-9. add admin and roles option, roles management. (connect to the ory-postgres).
-   fix the UGLY HACK for privileged token.
+1. automate the startup script (change names to clients) with Makefile, halt, stop reset env. (docker-compose)
+2. create admin section (read node articles).
+3. extend the hydra API (for creation of clients)
+4. add roles management(read ladon.go), understand private and public clients privateClient has_many PublicClients
+5. fix the UGLY HACK for privileged token.
 6. add integration test, get inspiration from other projects
-
-3. use docker-compose and add the full flow to the README.md with Makefile
 7. add continuous integration circle/travis to kubernetes/heroku.
-
-8. add email verification to the flow.
+8. apps - [ analytics ], [ users, clients, roles(policies) & tokens management(hydra-consent-js)],
+9. test go API with ZeroMQ, Kafka, RabbitMQ.
+10. add email verification to the flow.
+11. forgot my password.
+12. improve UX of authenticating (save scopes use refresh_token).
+13. analytics with ZeroMQ
+14. build CLI in go for the auth_center/hammock-studio (with banner) ecosystem.
 
 ### Quick start using docker:
 
