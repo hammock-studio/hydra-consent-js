@@ -42,7 +42,7 @@ const getClient = (accessToken, callback) => {
   request(
     {
       method: 'GET',
-      url: `${process.env.HYDRA_URL}/clients/some-consumer-local`,
+      url: `${process.env.HYDRA_URL}/clients/dashboard-local`,
       headers: {
         Authorization: `bearer ${accessToken}`,
         'Content-Type': 'application/json',
