@@ -5,6 +5,10 @@ delete_containers () {
   docker rm ory-hydra ory-postgres hydra-consent-js
 }
 
+build_consent_server () {
+  docker build -t hydra-consent-js .
+}
+
 run_postgres_container () {
   docker run \
     --name ory-postgres \
@@ -60,8 +64,8 @@ hydra_create_consent_policy () {
 
 hydra_create_dashboard_client () {
   hydra clients create --skip-tls-verify \
-    --id some-consumer-local \
-    --secret consumer-secret-local \
+    --id dashboard-local \
+    --secret dashboard-secret-local \
     -g authorization_code,refresh_token,client_credentials \
     -r token,code,id_token \
     --allowed-scopes openid,offline,hydra.clients,hydra.policies \
@@ -81,6 +85,7 @@ run_consent_server_container () {
 
 reset () {
   delete_containers
+  build_consent_server
   run_postgres_container
   run_hydra_migrations
   run_hydra_container
