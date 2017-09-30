@@ -1,0 +1,106 @@
+#!/bin/sh
+
+delete_containers () {
+  docker stop ory-hydra ory-postgres hydra-consent-js
+  docker rm ory-hydra ory-postgres hydra-consent-js
+}
+
+run_postgres_container () {
+  docker run \
+    --name ory-postgres \
+    -e POSTGRES_USER=hydra \
+    -e POSTGRES_PASSWORD=secret \
+    -e POSTGRES_DB=hydra -p 5431:5432 \
+    -d postgres:9.6
+}
+
+run_hydra_migrations () {
+  docker run \
+    --link ory-postgres:postgres \
+    -it --entrypoint \
+    hydra oryd/hydra:latest \
+    migrate sql $DATABASE_URL
+}
+
+run_hydra_container () {
+  docker run -d \
+    --name ory-hydra \
+    --link ory-postgres:postgres \
+    -p 9000:4444 \
+    -e SYSTEM_SECRET=$SYSTEM_SECRET \
+    -e DATABASE_URL=$DATABASE_URL \
+    -e ISSUER=https://localhost:9000/ \
+    -e CONSENT_URL=http://localhost:3000/consent \
+    -e FORCE_ROOT_CLIENT_CREDENTIALS=admin:demo-password \
+    oryd/hydra:latest
+}
+
+hydra_connect () {
+  hydra connect --skip-tls-verify --id admin --secret demo-password --url https://localhost:9000
+}
+
+hydra_create_consent_client () {
+  hydra clients create --skip-tls-verify \
+    --id consent-app-local \
+    --secret consent-secret-local \
+    --name "Consent App Client Local" \
+    --grant-types client_credentials \
+    --response-types token \
+    --allowed-scopes hydra.keys.get,hydra.policies,hydra.clients,hydra.groups,hydra.health,hydra.warden
+}
+
+hydra_create_consent_policy () {
+  hydra policies create --skip-tls-verify \
+    --actions get,create,update,delete \
+    --allow \
+    --id consent-app-policy-local \
+    --resources "rn:hydra:keys:hydra.consent.<.*>","rn:hydra:policies:<.*>","rn:hydra:clients:<.*>","rn:hydra:groups:<.*>","rn:hydra:health:<.*>","rn:hydra:warden:<.*>" \
+    --subjects consent-app-local
+}
+
+hydra_create_dashboard_client () {
+  hydra clients create --skip-tls-verify \
+    --id some-consumer-local \
+    --secret consumer-secret-local \
+    -g authorization_code,refresh_token,client_credentials \
+    -r token,code,id_token \
+    --allowed-scopes openid,offline,hydra.clients,hydra.policies \
+    --callbacks http://localhost:3000/callback
+}
+
+run_consent_server_container () {
+  docker run \
+    --name hydra-consent-js \
+    --link ory-hydra:hydra \
+    --link ory-postgres:postgres \
+    -e HYDRA_URL=https://hydra:4444 \
+    -e PG_URL=$DATABASE_URL \
+    -p 3000:3000 \
+    -d hydra-consent-js
+}
+
+reset () {
+  delete_containers
+  run_postgres_container
+  run_hydra_migrations
+  run_hydra_container
+
+  echo "waiting for hydra server ..."
+  sleep 15
+
+  hydra_connect
+  hydra_create_consent_client
+  hydra_create_consent_policy
+  hydra_create_dashboard_client
+  run_consent_server_container
+
+  echo "waiting for consent server ..."
+  sleep 2
+
+  open http://localhost:3000
+}
+
+export DATABASE_URL=postgres://hydra:secret@postgres:5432/hydra?sslmode=disable
+export SYSTEM_SECRET=y82XL-wAPCCZu+B41234
+
+reset

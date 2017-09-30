@@ -5,6 +5,18 @@ const oauth2 = require('simple-oauth2').create(config.hydra);
 const childProcess = require('child_process');
 
 const getAuthorizationURI = () => {
+  const oauth2 = require('simple-oauth2').create({
+    "client": {
+      "id": process.env.HYDRA_DASHBOARD_CLIENT_ID,
+      "secret": process.env.HYDRA_DASHBOARD_CLIENT_SECRET
+    },
+    "auth": {
+      "tokenHost": process.env.HYDRA_OAUTH_URL,
+      "authorizePath": "/oauth2/auth",
+      "tokenPath": "/oauth2/token"
+    }
+  });
+
   const authorizationUri = oauth2.authorizationCode.authorizeURL({
     redirect_uri: process.env.HYDRA_CALLBACK_URI,
     scope: 'openid offline hydra.clients hydra.policies',
