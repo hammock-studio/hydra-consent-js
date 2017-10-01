@@ -1,0 +1,73 @@
+
+# FOR DEVELOPMENT PURPOSES ONLY! #
+
+version: '3'
+
+services:
+#--------------------------------POSTGRES------------------------------#
+  postgres:
+    container_name: postgres
+    image: postgres:9.6
+    ports:
+      - "5431:5432"
+    environment:
+      - POSTGRES_USER=hydra
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=hydra
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+#--------------------------------HYDRA------------------------------#
+  hydra:
+    container_name: hydra
+    image: oryd/hydra:latest
+    links:
+      - postgres:postgres
+    ports:
+      - "9000:4444"
+    environment:
+      - DATABASE_URL=postgres://hydra:secret@postgres:5432/hydra?sslmode=disable
+      - SYSTEM_SECRET=hydra-top-secret-not
+      - ISSUER=https://localhost:9000
+      - CONSENT_URL=http://localhost:3000/consent
+      - FORCE_ROOT_CLIENT_CREDENTIALS=admin:demo-password
+    depends_on:
+      - postgres
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4444"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+#--------------------------------HYDRA-MIGRATE----------------------#
+  hydra_migrate:
+    container_name: hydra_migrate
+    image: oryd/hydra:latest
+    links:
+      - postgres:postgres
+    depends_on:
+      - postgres
+    entrypoint: /go/bin/hydra migrate sql postgres://hydra:secret@postgres:5432/hydra?sslmode=disable
+
+#--------------------------------CONSENT----------------------------#
+  consent:
+    container_name: consent
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    links:
+      - postgres:postgres
+      - hydra:hydra
+    environment:
+      - HYDRA_URL=https://hydra:4444
+      - PG_URL=postgres://hydra:secret@postgres:5432/hydra?sslmode=disable
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+    depends_on:
+      - hydra
+    restart: on-failure

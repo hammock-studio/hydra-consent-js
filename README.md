@@ -2,9 +2,9 @@
 
 ## TODO
 
-1. automate the startup script (change names to clients) with Makefile, halt, stop reset env. (docker-compose)
+1. automate with docker-compose need to rewrite the Dockerfiles to achieve sync.
 2. create admin section (read node articles).
-3. extend the hydra API (for creation of clients)
+3. extend the hydra API (for creation of clients).
 4. add roles management(read ladon.go), understand private and public clients privateClient has_many PublicClients
 5. fix the UGLY HACK for privileged token.
 6. add integration test, get inspiration from other projects
