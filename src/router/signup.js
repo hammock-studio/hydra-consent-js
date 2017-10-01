@@ -16,7 +16,7 @@ router.route('/').get(sessionChecker, (req, res) => {
   if (req.query.consent_flow) {
     res.render('signup-consent', { challenge: req.query.challenge });
   } else {
-    res.render('signup');
+    res.redirect('/');
   }
 }).post((req, res) => {
   const userData = {
@@ -31,7 +31,7 @@ router.route('/').get(sessionChecker, (req, res) => {
     if (req.body.consent_flow) {
       res.redirect(`/consent?challenge=${req.body.challenge}`);
     } else {
-      res.redirect('/dashboard');
+      res.redirect('/');
     }
   }).catch(() => {
     res.redirect('/');
