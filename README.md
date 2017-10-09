@@ -2,8 +2,8 @@
 
 ## TODO
 
-1. automate the startup script (change names to clients) with Makefile, halt, stop reset env. (docker-compose)
-2. create admin section (read node articles).
+1. automate the startup script (change names to clients) with Makefile, halt, stop reset env. (docker-compose) √
+2. create admin section - create admin default layout, add partials as modals for each main route for forms info etc..
 3. extend the hydra API (for creation of clients)
 4. add roles management(read ladon.go), understand private and public clients privateClient has_many PublicClients
 5. fix the UGLY HACK for privileged token.
