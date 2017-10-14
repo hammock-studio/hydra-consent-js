@@ -1,0 +1,39 @@
+{{> admin/users/add-user-modal }}
+{{> admin/users/edit-user-modal }}
+
+<div class="card mb-3">
+  <div class="card-header">
+    <i class="fa fa-fw fa-users"></i> Users </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover" id="users-table" width="100%" cellspacing="0">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#users-add-user" data-whatever="@mdo" ><i class="fa fa-plus" aria-hidden="true"></i> Add User </button>
+            </div>
+            <div class="col-md-2 ml-auto">
+              <button type="button" class="btn btn-outline-info" id="back"> Back </button>
+              <button type="button" class="btn btn-outline-info" id="next"> Next </button>
+            </div>
+          </div>
+        </div>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Admin</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+</div>
+</div>
+</div>

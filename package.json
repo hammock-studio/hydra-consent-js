@@ -20,6 +20,7 @@
     "express": "^4.15.4",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.5",
+    "font-awesome": "^4.7.0",
     "hydra-js": "^0.1.1",
     "pg": "^7.3.0",
     "pg-hstore": "^2.3.2",

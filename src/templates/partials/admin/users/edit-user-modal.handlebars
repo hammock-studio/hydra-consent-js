@@ -1,0 +1,37 @@
+<div class="modal fade" id="users-edit-user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="user-username" class="form-control-label">Username</label>
+            <input id="username" type="text" class="form-control" id="recipient-name">
+          </div>
+          <div class="form-group">
+            <label for="user-email" class="form-control-label">Email</label>
+            <input id="email" type="text" class="form-control" id="recipient-name">
+          </div>
+          <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-secondary">
+              <input type="radio" name="options" id="admin" autocomplete="off"> Admin
+            </label>
+            <label class="btn btn-secondary">
+              <input type="radio" name="options" id="user" autocomplete="off"> User
+            </label>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Send message</button>
+      </div>
+    </div>
+  </div>
+</div>
