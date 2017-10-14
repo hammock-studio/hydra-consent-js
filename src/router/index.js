@@ -3,6 +3,7 @@ const express = require('express');
 
 const router = express.Router();
 
+router.use('/admin', require('./admin'));
 router.use('/login', require('./login'));
 router.use('/logout', require('./logout'));
 router.use('/signup', require('./signup'));
@@ -10,8 +11,16 @@ router.use('/consent', require('./consent'));
 router.use('/dashboard', require('./dashboard'));
 
 const sessionChecker = (req, res, next) => {
-  if (req.session.user && req.cookies.user_sid && req.session.user.access_token) {
-    res.redirect('/dashboard');
+  if (
+    req.session.user &&
+    req.cookies.user_sid &&
+    req.session.user.access_token
+  ) {
+    if (req.session.user.admin) {
+      res.redirect('/admin');
+    } else {
+      res.redirect('/dashboard');
+    }
   } else {
     next();
   }
@@ -31,7 +40,11 @@ router.get('/callback', (req, res) => {
       req.session.user.access_token = token.token.access_token;
       req.session.user.refresh_token = token.token.refresh_token;
 
-      res.redirect('/dashboard');
+      if (req.session.user.admin) {
+        res.redirect('/admin')
+      } else {
+        res.redirect('/dashboard');
+      }
     });
   });
 });
