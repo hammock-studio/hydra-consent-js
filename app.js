@@ -5,8 +5,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const app = express();
 const exphbs = require('express-handlebars');
+
+const app = express();
+const api = require(`./src/api/${process.env.API_VERSION}`);
 const router = require('./src/router');
 const hbs = exphbs.create({ layoutsDir: "./src/templates" });
 
@@ -45,6 +47,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/', router);
+app.use(`/${process.env.API_VERSION}`, api);
 
 app.use(function (req, res, next) {
   res.status(404).send("Sorry can't find that!")

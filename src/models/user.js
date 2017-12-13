@@ -16,6 +16,11 @@ module.exports = (db) => {
     password: {
       type: Sequelize.STRING,
       allowNull: false
+    },
+    admin: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   }, {
     hooks: {
