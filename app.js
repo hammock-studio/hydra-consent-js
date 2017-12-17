@@ -8,9 +8,12 @@ const session = require('express-session');
 const exphbs = require('express-handlebars');
 
 const app = express();
-const api = require(`./src/api/${process.env.API_VERSION}`);
 const router = require('./src/router');
-const hbs = exphbs.create({ layoutsDir: "./src/templates" });
+const api = require(`./src/api/${process.env.API_VERSION}`);
+const hbs = exphbs.create({
+  layoutsDir: "./src/templates",
+  partialsDir: "./src/templates/partials"
+});
 
 require('./src/models')(config.db);
 
